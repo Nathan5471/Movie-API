@@ -9,7 +9,7 @@ servers:
     description: Production server
 
 paths:
-  /register:
+  /auth/register:
     post:
       summary: Register a new user
       description: Allows a new user to register an account with a username and password.
@@ -58,7 +58,7 @@ paths:
                 properties:
                   error:
                     type: string
-  /login:
+  /auth/login:
     post:
       summary: Login a user
       description: Authenticates a user using their username and password.
