@@ -27,3 +27,5 @@ router.post("/login", async (req, res) => {
   }
   await loginUser(req, res);
 });
+
+export default router;
