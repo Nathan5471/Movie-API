@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRouter from "./routes/authRouter.js";
+import movieRouter from "./routes/movieRouter.js";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
@@ -21,7 +22,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.use("/api/auth", authRouter);
+app.use("/auth", authRouter);
+app.use("/movies", movieRouter);
 
 // Swagger API Docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

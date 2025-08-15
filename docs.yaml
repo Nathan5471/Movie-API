@@ -387,3 +387,166 @@ paths:
                 properties:
                   error:
                     type: string
+  /movies/add:
+    post:
+      summary: Add a movie
+      description: Add a movie to the database
+      tags:
+        - Movies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                releaseYear:
+                  type: integer
+                tvdbId:
+                  type: integer
+                token:
+                  type: string
+                required:
+                  - title
+                  - description
+                  - releaseYear
+                  - tvdbId
+                  - token
+      responses:
+        "201":
+          description: Movie added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /movies/all:
+    get:
+      summary: Get all movies
+      description: Gets a list of all of the movies in the database
+      tags:
+        - Movies
+      responses:
+        "200":
+          description: All of the movies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  movies:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        description:
+                          type: string
+                        releaseYear:
+                          type: integer
+                        tvdbId:
+                          type: integer
+        "404":
+          description: No movies found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /movies/{id}:
+    get:
+      summary: Get a movie by id
+      description: Get a movie from the database by its id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the movie to retrieve
+          schema:
+            type: string
+      tags:
+        - Movies
+      responses:
+        "200":
+          description: The request movies information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  releaseYear:
+                    type: integer
+                  tvdbId:
+                    type: integer
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
