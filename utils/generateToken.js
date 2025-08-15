@@ -7,7 +7,7 @@ const generateToken = (userId) => {
   if (!jwtSecret) {
     throw new Error("JWT_SECRET is not defined");
   }
-  const token = jwt.sign({ userId }, jwtSecret, {
+  const token = jwt.sign({ id: userId }, jwtSecret, {
     expiresIn: "30d",
   });
   return token;
