@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
 
-const authenticate = async (req, res, next) => {
+const nonRequiredAuthenticate = async (req, res, next) => {
   const { token } = req.body;
   if (!token) {
-    return res.status(401).json({ error: "No token provided." });
+    return next();
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -15,8 +15,8 @@ const authenticate = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    return res.status(401).json({ error: "Invalid token." });
+    return next();
   }
 };
 
-export default authenticate;
+export default nonRequiredAuthenticate;

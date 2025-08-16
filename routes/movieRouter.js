@@ -5,8 +5,12 @@ import {
   getMovieById,
   updateMovie,
   deleteMovie,
+  rateMovie,
+  getMovieRating,
+  removeMovieRating,
 } from "../controllers/movieController.js";
 import authenticate from "../middleware/authenticate.js";
+import nonRequiredAuthenticate from "../middleware/nonRequiredAuthenticate.js";
 
 const router = express.Router();
 
@@ -18,7 +22,24 @@ router.post("/add", authenticate, async (req, res) => {
   await addMovie(req, res);
 });
 
+router.post("/rate/:id", authenticate, async (req, res) => {
+  const { id } = req.params;
+  const { rating } = req.body;
+  if (!id || !rating) {
+    return res.status(400).json({ error: "Movie ID and rating are required." });
+  }
+  await rateMovie(req, res);
+});
+
 router.get("/all", getAllMovies);
+
+router.get("/getRating/:id", nonRequiredAuthenticate, async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ error: "Movie ID is required." });
+  }
+  await getMovieRating(req, res);
+});
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
@@ -48,6 +69,14 @@ router.delete("/delete/:id", authenticate, async (req, res) => {
     return res.status(400).json({ error: "Movie ID is required." });
   }
   await deleteMovie(req, res);
+});
+
+router.delete("/removeRating/:id", authenticate, async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ error: "Movie ID is required." });
+  }
+  await removeMovieRating(req, res);
 });
 
 export default router;

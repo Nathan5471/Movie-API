@@ -17,6 +17,28 @@ const movieSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  ratingsInformation: {
+    ratings: [
+      {
+        rating: {
+          type: Number,
+          minimum: 1,
+          maximum: 10,
+          required: true,
+        },
+        userId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+      },
+    ],
+    averageRating: {
+      type: Number,
+      minimum: 1,
+      maximum: 10,
+    },
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

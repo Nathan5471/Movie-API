@@ -694,3 +694,202 @@ paths:
                 properties:
                   error:
                     type: string
+  /movies/rate/{id}:
+    post:
+      summary: Rate a movie
+      description: Allows a logged in user to rate a movie
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the movie to rate
+          schema:
+            type: string
+      tags:
+        - User Movie Interactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 10
+                token:
+                  type: string
+              required:
+                - rating
+                - token
+      responses:
+        "201":
+          description: The movie was successfully rated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  averageRating:
+                    type: number
+                    format: float
+                    minimum: 1
+                    maximum: 10
+                  totalRatings:
+                    type: integer
+                    minimum: 0
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            applicatoin/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /movies/getRating/{id}:
+    get:
+      summary: Get the average rating of a movie
+      description: Retrieves the average rating, total ratings, and the user's rating (if they're logged in) of a movie
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the movie to get the rating for
+          schema:
+            type: string
+      tags:
+        - User Movie Interactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        "200":
+          description: The movie's rating information was retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  averageRating:
+                    type: number
+                    format: float
+                    minimum: 1
+                    maximum: 10
+                  totalRatings:
+                    type: integer
+                    minimum: 0
+                  userRating:
+                    type: integer
+                    minimum: 1
+                    maximum: 10
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /movies/removeRating/{id}:
+    delete:
+      summary: Remove a user's rating from a movie
+      description: Allows a logged in user to remove their rating from a movie
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the movie to remove the rating from
+          schema:
+            type: string
+      tags:
+        - User Movie Interactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+              required:
+                - token
+      responses:
+        "200":
+          description: The rating was successfully removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
