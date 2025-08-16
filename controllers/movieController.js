@@ -19,6 +19,7 @@ export const addMovie = async (req, res) => {
     await newMovie.save();
     return res.status(201).json({ id: newMovie._id, title: newMovie.title });
   } catch (error) {
+    console.error("Error adding movie:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
@@ -28,6 +29,7 @@ export const getAllMovies = async (req, res) => {
     const movies = await Movie.find({});
     return res.status(200).json(movies);
   } catch (error) {
+    console.error("Error fetching movies:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
@@ -41,6 +43,7 @@ export const getMovieById = async (req, res) => {
     }
     return res.status(200).json(movie);
   } catch (error) {
+    console.error("Error fetching movie by id:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
@@ -53,7 +56,7 @@ export const updateMovie = async (req, res) => {
     if (!movie) {
       return res.status(404).json({ error: "Movie not found." });
     }
-    if (movie.userId !== req.user._id) {
+    if (movie.userId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized." });
     }
     if (title) movie.title = title;
@@ -71,6 +74,7 @@ export const updateMovie = async (req, res) => {
     await movie.save();
     return res.status(200).json(movie);
   } catch (error) {
+    console.error("Error updating movie:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
@@ -82,12 +86,13 @@ export const deleteMovie = async (req, res) => {
     if (!movie) {
       return res.status(404).json({ error: "Movie not found." });
     }
-    if (movie.userId !== req.user._id) {
+    if (movie.userId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized." });
     }
-    await movie.remove();
+    await Movie.findByIdAndDelete(id);
     return res.status(200).json({ message: "Movie deleted successfully." });
   } catch (error) {
+    console.error("Error deleting movie:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
@@ -100,6 +105,9 @@ export const rateMovie = async (req, res) => {
     if (!movie) {
       return res.status(404).json({ error: "Movie not found." });
     }
+    movie.ratingsInformation.ratings = movie.ratingsInformation.ratings.filter(
+      (rating) => rating.userId.toString() !== req.user._id.toString()
+    );
     movie.ratingsInformation.ratings.push({
       rating,
       userId: req.user._id,
@@ -115,6 +123,7 @@ export const rateMovie = async (req, res) => {
       totalRatings: movie.ratingsInformation.ratings.length,
     });
   } catch (error) {
+    console.error("Error rating movie:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
@@ -128,7 +137,7 @@ export const getMovieRating = async (req, res) => {
     }
     if (req.user) {
       const userRating = movie.ratingsInformation.ratings.find(
-        (rating) => rating.userId === req.user._id
+        (rating) => rating.userId.toString() === req.user._id.toString()
       );
       if (userRating) {
         return res.status(200).json({
@@ -143,6 +152,7 @@ export const getMovieRating = async (req, res) => {
       totalRatings: movie.ratingsInformation.ratings.length,
     });
   } catch (error) {
+    console.error("Error getting movie rating:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };
@@ -155,16 +165,21 @@ export const removeMovieRating = async (req, res) => {
       return res.status(404).json({ error: "Movie not found." });
     }
     movie.ratingsInformation.ratings = movie.ratingsInformation.ratings.filter(
-      (rating) => rating.userId !== req.user._id
+      (rating) => rating.userId.toString() !== req.user._id.toString()
     );
-    movie.ratingsInformation.averageRating =
-      movie.ratingsInformation.ratings.reduce(
-        (acc, curr) => acc + curr.rating,
-        0
-      ) / movie.ratingsInformation.ratings.length;
+    if (movie.ratingsInformation.ratings.length === 0) {
+      movie.ratingsInformation.averageRating = 0;
+    } else {
+      movie.ratingsInformation.averageRating =
+        movie.ratingsInformation.ratings.reduce(
+          (acc, curr) => acc + curr.rating,
+          0
+        ) / movie.ratingsInformation.ratings.length;
+    }
     await movie.save();
     return res.status(200).json({ message: "Rating removed successfully." });
   } catch (error) {
+    console.error("Error removing movie rating:", error);
     return res.status(500).json({ error: "Internal server error." });
   }
 };

@@ -133,16 +133,8 @@ paths:
       description: Gets the logged in user's information
       tags:
         - Authentication
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-              required:
-                - token
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Current user information retrieved successfully
@@ -205,11 +197,10 @@ paths:
               properties:
                 newUsername:
                   type: string
-                token:
-                  type: string
               required:
                 - newUsername
-                - token
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Username updated successfully
@@ -270,8 +261,6 @@ paths:
             schema:
               type: object
               properties:
-                token:
-                  type: string
                 currentPassword:
                   type: string
                 newPassword:
@@ -281,10 +270,11 @@ paths:
                   type: string
                   minLength: 6
               required:
-                - token
                 - currentPassword
                 - newPassword
                 - confirmNewPassword
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Password updated successfully
@@ -343,13 +333,12 @@ paths:
             schema:
               type: object
               properties:
-                token:
-                  type: string
                 password:
                   type: string
               required:
-                - token
                 - password
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Account deleted successfully
@@ -407,14 +396,13 @@ paths:
                   type: integer
                 tvdbId:
                   type: integer
-                token:
-                  type: string
               required:
                 - title
                 - description
                 - releaseYear
                 - tvdbId
-                - token
+      security:
+        - bearerAuth: []
       responses:
         "201":
           description: Movie added successfully
@@ -577,10 +565,8 @@ paths:
                   type: integer
                 tvdbId:
                   type: integer
-                token:
-                  type: string
-              required:
-                - token
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: The movie was successfully updated
@@ -648,6 +634,8 @@ paths:
             type: string
       tags:
         - Movies
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: The move was successfully deleted
@@ -717,11 +705,10 @@ paths:
                   type: integer
                   minimum: 1
                   maximum: 10
-                token:
-                  type: string
               required:
                 - rating
-                - token
+      security:
+        - bearerAuth: []
       responses:
         "201":
           description: The movie was successfully rated
@@ -787,14 +774,8 @@ paths:
             type: string
       tags:
         - User Movie Interactions
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: The movie's rating information was retrieved successfully
@@ -855,16 +836,8 @@ paths:
             type: string
       tags:
         - User Movie Interactions
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-              required:
-                - token
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: The rating was successfully removed
@@ -893,3 +866,9 @@ paths:
                 properties:
                   error:
                     type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
