@@ -550,3 +550,147 @@ paths:
                 properties:
                   error:
                     type: string
+  /movies/edit/{id}:
+    put:
+      summary: Edit a movie by id
+      description: Allows the user to edit a movie by its id if they added the movie
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the movie to edit
+          schema:
+            type: string
+      tags:
+        - Movies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                releaseYear:
+                  type: integer
+                tvdbId:
+                  type: integer
+                token:
+                  type: string
+              required:
+                - token
+      responses:
+        "200":
+          description: The movie was successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  releaseYear:
+                    type: integer
+                  tvdbId:
+                    type: integer
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "403":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                porperties:
+                  error:
+                    type: string
+  /movies/delete/{id}:
+    delete:
+      summary: Delete a movie by id
+      description: Allows the user to delete a movie by its id if they added the movie
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The id of the movie to delete
+          schema:
+            type: string
+      tags:
+        - Movies
+      responses:
+        "200":
+          description: The move was successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "403":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
