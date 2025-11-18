@@ -1,0 +1,10 @@
+services:
+  movie-api:
+    image: nathan5471/movie-api:latest
+    container_name: movie-api
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - MONGODB_URL=mongodbURL
+      - JWT_SECRET=your_jwt_secret
